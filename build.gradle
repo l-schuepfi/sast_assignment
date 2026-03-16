@@ -3,6 +3,7 @@ plugins {
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 	id 'java'
 	id 'war'
+	id "org.sonarqube" version "7.1.0.6387"
 }
 
 group = 'com.djamware'
