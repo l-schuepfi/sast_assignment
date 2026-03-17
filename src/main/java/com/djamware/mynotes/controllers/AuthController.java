@@ -15,8 +15,13 @@ import com.djamware.mynotes.services.CustomUserDetailsService;
 @Controller
 public class AuthController {
 
+	private final CustomUserDetailsService userService;
+
 	@Autowired
-	private CustomUserDetailsService userService;
+	public AuthController(CustomUserDetailsService userService){
+		this.userService = userService;
+	}
+
 
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
 	public ModelAndView login() {
