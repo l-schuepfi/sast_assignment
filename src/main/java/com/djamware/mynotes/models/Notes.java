@@ -24,7 +24,6 @@ public class Notes {
 
 	public Notes() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public Notes(String title, String content, Date updated) {
