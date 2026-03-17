@@ -19,7 +19,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
-public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+public class WebSecurityConfig {
 
     private final CustomizeAuthenticationSuccessHandler customizeAuthenticationSuccessHandler;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -46,14 +46,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return firewall;
     }
 
-    @Override
+
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         UserDetailsService userDetailsService = jpaUserDetails();
         auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder);
 
     }
 
-    @Override
+
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests().antMatchers("/notes").hasAuthority("ADMIN")
                 .antMatchers("/login").permitAll()
@@ -68,7 +68,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .exceptionHandling();
     }
 
-    @Override
+
     public void configure(WebSecurity web) throws Exception {
         web.ignoring().antMatchers("/resources/**", "/static/**", "/css/**", "/js/**", "/images/**");
         web.httpFirewall(allowUrlEncodedDoubleSlashFirewall());
