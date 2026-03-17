@@ -21,6 +21,13 @@ public class NotesController {
 	private final CustomUserDetailsService userService;
 	private final NotesRepository noteRepository;
 
+	public static final String ATTR_CURRENT_USER = "currentUser";
+	public static final String ATTR_FULL_NAME = "fullName";
+	public static final String ATTR_ADMIN_MESSAGE = "adminMessage";
+	public static final String ATTR_VALUE_FULL_NAME = "Welcome ";
+	public static final String ATTR_VALUE_ADMIN_MESSAGE = "Content Available Only for Users with Admin Role";
+
+
 	@Autowired
 	NotesController(CustomUserDetailsService userService, NotesRepository noteRepository){
 		this.userService = userService;
@@ -33,9 +40,9 @@ public class NotesController {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userService.findUserByEmail(auth.getName());
 		modelAndView.addObject("notes", noteRepository.findAll());
-		modelAndView.addObject("currentUser", user);
-		modelAndView.addObject("fullName", "Welcome " + user.getFullname());
-		modelAndView.addObject("adminMessage", "Content Available Only for Users with Admin Role");
+		modelAndView.addObject(ATTR_CURRENT_USER, user);
+		modelAndView.addObject(ATTR_FULL_NAME, ATTR_VALUE_FULL_NAME + user.getFullname());
+		modelAndView.addObject(ATTR_ADMIN_MESSAGE, ATTR_VALUE_ADMIN_MESSAGE);
 		modelAndView.setViewName("notes");
 		return modelAndView;
 	}
@@ -45,9 +52,9 @@ public class NotesController {
 		ModelAndView modelAndView = new ModelAndView();
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userService.findUserByEmail(auth.getName());
-		modelAndView.addObject("currentUser", user);
-		modelAndView.addObject("fullName", "Welcome " + user.getFullname());
-		modelAndView.addObject("adminMessage", "Content Available Only for Users with Admin Role");
+		modelAndView.addObject(ATTR_CURRENT_USER, user);
+		modelAndView.addObject(ATTR_FULL_NAME, ATTR_VALUE_FULL_NAME + user.getFullname());
+		modelAndView.addObject(ATTR_ADMIN_MESSAGE, ATTR_VALUE_ADMIN_MESSAGE);
 		modelAndView.setViewName("create");
 		return modelAndView;
 	}
@@ -68,9 +75,9 @@ public class NotesController {
 		ModelAndView modelAndView = new ModelAndView();
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userService.findUserByEmail(auth.getName());
-		modelAndView.addObject("currentUser", user);
-		modelAndView.addObject("fullName", "Welcome " + user.getFullname());
-		modelAndView.addObject("adminMessage", "Content Available Only for Users with Admin Role");
+		modelAndView.addObject(ATTR_CURRENT_USER, user);
+		modelAndView.addObject(ATTR_FULL_NAME, ATTR_VALUE_FULL_NAME + user.getFullname());
+		modelAndView.addObject(ATTR_ADMIN_MESSAGE, ATTR_VALUE_ADMIN_MESSAGE);
 		modelAndView.addObject("note", noteRepository.findById(id).orElse(null));
 		modelAndView.setViewName("show");
 		return modelAndView;
@@ -91,9 +98,9 @@ public class NotesController {
 		ModelAndView modelAndView = new ModelAndView();
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userService.findUserByEmail(auth.getName());
-		modelAndView.addObject("currentUser", user);
-		modelAndView.addObject("fullName", "Welcome " + user.getFullname());
-		modelAndView.addObject("adminMessage", "Content Available Only for Users with Admin Role");
+		modelAndView.addObject(ATTR_CURRENT_USER, user);
+		modelAndView.addObject(ATTR_FULL_NAME, ATTR_VALUE_FULL_NAME + user.getFullname());
+		modelAndView.addObject(ATTR_ADMIN_MESSAGE, ATTR_VALUE_ADMIN_MESSAGE);
 		modelAndView.addObject("note", noteRepository.findById(id).orElse(null));
 		modelAndView.setViewName("edit");
 		return modelAndView;
