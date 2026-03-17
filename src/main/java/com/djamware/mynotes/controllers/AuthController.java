@@ -5,6 +5,8 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
@@ -23,14 +25,14 @@ public class AuthController {
 	}
 
 
-	@RequestMapping(value = "/login", method = RequestMethod.GET)
+	@GetMapping(value = "/login")
 	public ModelAndView login() {
 		ModelAndView modelAndView = new ModelAndView();
 		modelAndView.setViewName("login");
 		return modelAndView;
 	}
 
-	@RequestMapping(value = "/signup", method = RequestMethod.GET)
+	@GetMapping(value = "/signup")
 	public ModelAndView signup() {
 		ModelAndView modelAndView = new ModelAndView();
 		User user = new User();
@@ -39,7 +41,7 @@ public class AuthController {
 		return modelAndView;
 	}
 
-	@RequestMapping(value = "/signup", method = RequestMethod.POST)
+	@PostMapping(value = "/signup")
 	public ModelAndView createNewUser(@Valid User user, BindingResult bindingResult) {
 		ModelAndView modelAndView = new ModelAndView();
 		User userExists = userService.findUserByEmail(user.getEmail());
