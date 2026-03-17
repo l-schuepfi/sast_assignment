@@ -79,7 +79,9 @@ public class NotesController {
 	@RequestMapping("/notes/delete")
 	public String delete(@RequestParam Long id) {
 		Notes note = noteRepository.findById(id).orElse(null);
+		if(note != null){
 		noteRepository.delete(note);
+		}
 
 		return "redirect:/notes";
 	}
