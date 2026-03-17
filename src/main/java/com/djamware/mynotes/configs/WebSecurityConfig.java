@@ -69,7 +69,7 @@ public class WebSecurityConfig {
     }
 
 
-    public void configure(WebSecurity web) throws Exception {
+    public void configure(WebSecurity web) {
         web.ignoring().antMatchers("/resources/**", "/static/**", "/css/**", "/js/**", "/images/**");
         web.httpFirewall(allowUrlEncodedDoubleSlashFirewall());
     }
