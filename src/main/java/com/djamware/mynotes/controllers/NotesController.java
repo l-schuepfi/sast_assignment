@@ -20,11 +20,15 @@ import com.djamware.mynotes.services.CustomUserDetailsService;
 @Controller
 public class NotesController {
 
-	@Autowired
-	private CustomUserDetailsService userService;
+
+	private final CustomUserDetailsService userService;
+	private final NotesRepository noteRepository;
 
 	@Autowired
-	private NotesRepository noteRepository;
+	NotesController(CustomUserDetailsService userService, NotesRepository noteRepository){
+		this.userService = userService;
+		this.noteRepository = noteRepository;
+	}
 
 	@RequestMapping(value = "/notes", method = RequestMethod.GET)
 	public ModelAndView notes() {
