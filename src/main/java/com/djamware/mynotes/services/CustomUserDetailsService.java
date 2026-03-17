@@ -38,13 +38,6 @@ public class CustomUserDetailsService implements UserDetailsService {
         return userRepository.findUserByEmail(email);
     }
 
-//	public void saveUser(User user, String role) {
-//	    user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-//	    user.setEnabled(true);
-//	    Role userRole = roleRepository.findByRole(role);
-//	    user.setRoles(new HashSet<>(Arrays.asList(userRole)));
-//	    userRepository.save(user);
-//	}
     public void saveUser(User user) {
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         user.setEnabled(true);
@@ -67,12 +60,13 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     private List<GrantedAuthority> getUserAuthority(Set<Role> userRoles) {
         Set<GrantedAuthority> roles = new HashSet<>();
-        userRoles.forEach((role) -> {
-            roles.add(new SimpleGrantedAuthority(role.getRole()));
-        });
+        userRoles.forEach(role ->
+            roles.add(new SimpleGrantedAuthority(role.getRole()))
+        );
 
-        List<GrantedAuthority> grantedAuthorities = new ArrayList<>(roles);
-        return grantedAuthorities;
+
+
+        return new ArrayList<>(roles);
     }
 
     private UserDetails buildUserForAuthentication(User user, List<GrantedAuthority> authorities) {
