@@ -2,6 +2,7 @@ package com.djamware.mynotes.controllers;
 
 import javax.validation.Valid;
 
+import com.djamware.mynotes.models.UserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -42,9 +43,9 @@ public class AuthController {
 	}
 
 	@PostMapping(value = "/signup")
-	public ModelAndView createNewUser(@Valid User user, BindingResult bindingResult) {
+	public ModelAndView createNewUser(@Valid UserDTO userDTO, BindingResult bindingResult) {
 		ModelAndView modelAndView = new ModelAndView();
-		User userExists = userService.findUserByEmail(user.getEmail());
+		User userExists = userService.findUserByEmail(userDTO.getEmail());
 		if (userExists != null) {
 			bindingResult.rejectValue("email", "error.user",
 					"There is already a user registered with the username provided");
@@ -52,7 +53,11 @@ public class AuthController {
 		if (bindingResult.hasErrors()) {
 			modelAndView.setViewName("signup");
 		} else {
-			userService.saveUser(user);
+
+			User newUser = new User();
+			newUser.setEmail(userDTO.getEmail());
+
+			userService.saveUser(newUser);
 			modelAndView.addObject("successMessage", "User has been registered successfully");
 			modelAndView.addObject("user", new User());
 			modelAndView.setViewName("login");
