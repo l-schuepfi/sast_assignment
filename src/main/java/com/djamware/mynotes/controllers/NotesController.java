@@ -70,8 +70,7 @@ public class NotesController {
 		return "redirect:/notes/show/" + note.getId();
 	}
 
-	@RequestMapping("/notes/show/{id}")
-	public ModelAndView show(@PathVariable Long id) {
+	private ModelAndView setModelAndViewCommonData (String text, Long id) {
 		ModelAndView modelAndView = new ModelAndView();
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userService.findUserByEmail(auth.getName());
@@ -79,8 +78,13 @@ public class NotesController {
 		modelAndView.addObject(ATTR_FULL_NAME, ATTR_VALUE_FULL_NAME + user.getFullname());
 		modelAndView.addObject(ATTR_ADMIN_MESSAGE, ATTR_VALUE_ADMIN_MESSAGE);
 		modelAndView.addObject("note", noteRepository.findById(id).orElse(null));
-		modelAndView.setViewName("show");
+		modelAndView.setViewName(text);
 		return modelAndView;
+	}
+
+	@RequestMapping("/notes/show/{id}")
+	public ModelAndView show(@PathVariable Long id) {
+		return setModelAndViewCommonData("show", id);
 	}
 
 	@RequestMapping("/notes/delete")
@@ -95,15 +99,7 @@ public class NotesController {
 
 	@RequestMapping("/notes/edit/{id}")
 	public ModelAndView edit(@PathVariable Long id) {
-		ModelAndView modelAndView = new ModelAndView();
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		User user = userService.findUserByEmail(auth.getName());
-		modelAndView.addObject(ATTR_CURRENT_USER, user);
-		modelAndView.addObject(ATTR_FULL_NAME, ATTR_VALUE_FULL_NAME + user.getFullname());
-		modelAndView.addObject(ATTR_ADMIN_MESSAGE, ATTR_VALUE_ADMIN_MESSAGE);
-		modelAndView.addObject("note", noteRepository.findById(id).orElse(null));
-		modelAndView.setViewName("edit");
-		return modelAndView;
+		return setModelAndViewCommonData("edit", id);
 	}
 
 	@RequestMapping("/notes/update")
