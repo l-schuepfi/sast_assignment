@@ -19,11 +19,14 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Autowired
-    CustomizeAuthenticationSuccessHandler customizeAuthenticationSuccessHandler;
+    private final CustomizeAuthenticationSuccessHandler customizeAuthenticationSuccessHandler;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Autowired
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
+    public WebSecurityConfig(CustomizeAuthenticationSuccessHandler customizeAuthenticationSuccessHandler,BCryptPasswordEncoder bCryptPasswordEncoder){
+        this.customizeAuthenticationSuccessHandler = customizeAuthenticationSuccessHandler;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+    }
 
     @Bean
     public UserDetailsService jpaUserDetails() {
