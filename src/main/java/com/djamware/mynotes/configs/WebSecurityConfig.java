@@ -1,5 +1,7 @@
 package com.djamware.mynotes.configs;
 
+import com.djamware.mynotes.repositories.RoleRepository;
+import com.djamware.mynotes.repositories.UserRepository;
 import com.djamware.mynotes.services.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -21,16 +23,20 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final CustomizeAuthenticationSuccessHandler customizeAuthenticationSuccessHandler;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
 
     @Autowired
-    public WebSecurityConfig(CustomizeAuthenticationSuccessHandler customizeAuthenticationSuccessHandler,BCryptPasswordEncoder bCryptPasswordEncoder){
+    public WebSecurityConfig(CustomizeAuthenticationSuccessHandler customizeAuthenticationSuccessHandler, BCryptPasswordEncoder bCryptPasswordEncoder, UserRepository userRepository, RoleRepository roleRepository){
         this.customizeAuthenticationSuccessHandler = customizeAuthenticationSuccessHandler;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+        this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
     }
 
     @Bean
     public UserDetailsService jpaUserDetails() {
-        return new CustomUserDetailsService();
+        return new CustomUserDetailsService(userRepository, roleRepository, bCryptPasswordEncoder);
     }
 
     @Bean
