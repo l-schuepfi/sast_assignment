@@ -102,6 +102,9 @@ public class NotesController {
 	@RequestMapping("/notes/update")
 	public String update(@RequestParam Long id, @RequestParam String title, @RequestParam String content) {
 		Notes note = noteRepository.findById(id).orElse(null);
+		if (note == null){
+			return "redirct:/notes";
+		}
 		note.setTitle(title);
 		note.setContent(content);
 		note.setUpdated(new Date());
