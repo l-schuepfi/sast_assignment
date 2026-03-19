@@ -47,7 +47,7 @@ public class NotesController {
 		return modelAndView;
 	}
 
-	@RequestMapping("/notes/create")
+	@GetMapping("/notes/create")
 	public ModelAndView create() {
 		ModelAndView modelAndView = new ModelAndView();
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -59,7 +59,7 @@ public class NotesController {
 		return modelAndView;
 	}
 
-	@RequestMapping("/notes/save")
+	@PostMapping("/notes/save")
 	public String save(@RequestParam String title, @RequestParam String content) {
 		Notes note = new Notes();
 		note.setTitle(title);
@@ -82,12 +82,12 @@ public class NotesController {
 		return modelAndView;
 	}
 
-	@RequestMapping("/notes/show/{id}")
+	@GetMapping("/notes/show/{id}")
 	public ModelAndView show(@PathVariable Long id) {
 		return setModelAndViewCommonData("show", id);
 	}
 
-	@RequestMapping("/notes/delete")
+	@PostMapping("/notes/delete")
 	public String delete(@RequestParam Long id) {
 		Notes note = noteRepository.findById(id).orElse(null);
 		if(note != null){
@@ -97,12 +97,12 @@ public class NotesController {
 		return "redirect:/notes";
 	}
 
-	@RequestMapping("/notes/edit/{id}")
+	@GetMapping("/notes/edit/{id}")
 	public ModelAndView edit(@PathVariable Long id) {
 		return setModelAndViewCommonData("edit", id);
 	}
 
-	@RequestMapping("/notes/update")
+	@PostMapping("/notes/update")
 	public String update(@RequestParam Long id, @RequestParam String title, @RequestParam String content) {
 		Notes note = noteRepository.findById(id).orElse(null);
 		if (note == null){
