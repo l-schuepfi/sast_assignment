@@ -23,7 +23,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
   	implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:3.3.0'
 	runtimeOnly 'com.h2database:h2:2.2.220'
-	providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
+	providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat:3.4.13'
 	testImplementation('org.springframework.boot:spring-boot-starter-test:3.5.11') {
 		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
 	}
