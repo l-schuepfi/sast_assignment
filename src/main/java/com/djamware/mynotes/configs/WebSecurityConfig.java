@@ -54,11 +54,11 @@ public class WebSecurityConfig {
 
 
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests().antMatchers("/notes").hasAuthority("ADMIN")
-                .antMatchers("/login").permitAll()
-                .antMatchers("/signup").permitAll()
-                .antMatchers("/notes/**").hasAuthority("ADMIN")
-                .antMatchers("/h2/console").permitAll()
+        http.authorizeRequests().requestMatchers("/notes").hasAuthority("ADMIN")
+                .requestMatchers("/login").permitAll()
+                .requestMatchers("/signup").permitAll()
+                .requestMatchers("/notes/**").hasAuthority("ADMIN")
+                .requestMatchers("/h2/console").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .formLogin().successHandler(customizeAuthenticationSuccessHandler).loginPage("/login")
@@ -69,7 +69,7 @@ public class WebSecurityConfig {
 
 
     public void configure(WebSecurity web) {
-        web.ignoring().antMatchers("/resources/**", "/static/**", "/css/**", "/js/**", "/images/**");
+        web.ignoring().requestMatchers("/resources/**", "/static/**", "/css/**", "/js/**", "/images/**");
         web.httpFirewall(allowUrlEncodedDoubleSlashFirewall());
     }
 
