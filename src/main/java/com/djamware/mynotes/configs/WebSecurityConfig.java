@@ -3,18 +3,20 @@ package com.djamware.mynotes.configs;
 import com.djamware.mynotes.repositories.RoleRepository;
 import com.djamware.mynotes.repositories.UserRepository;
 import com.djamware.mynotes.services.CustomUserDetailsService;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.firewall.HttpFirewall;
 import org.springframework.security.web.firewall.StrictHttpFirewall;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
@@ -46,31 +48,49 @@ public class WebSecurityConfig {
     }
 
 
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        UserDetailsService userDetailsService = jpaUserDetails();
-        auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder);
+    @Bean
+    public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
+        // retrieve builder from httpSecurity
+        AuthenticationManagerBuilder authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
 
+        authenticationManagerBuilder
+                .userDetailsService(jpaUserDetails())
+                .passwordEncoder(bCryptPasswordEncoder);
+        return authenticationManagerBuilder.build();
     }
 
 
-    protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests().requestMatchers("/notes").hasAuthority("ADMIN")
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+
+        http.authorizeHttpRequests(
+                auth-> auth.requestMatchers("/notes").hasAuthority("ADMIN")
                 .requestMatchers("/login").permitAll()
                 .requestMatchers("/signup").permitAll()
                 .requestMatchers("/notes/**").hasAuthority("ADMIN")
                 .requestMatchers("/h2/console").permitAll()
                 .anyRequest().authenticated()
-                .and()
-                .formLogin().successHandler(customizeAuthenticationSuccessHandler).loginPage("/login")
-                .failureUrl("/login?error=true").usernameParameter("email").passwordParameter("password").and().logout()
-                .logoutRequestMatcher(new AntPathRequestMatcher("/logout")).logoutSuccessUrl("/notes").and()
-                .exceptionHandling();
+                )
+                .formLogin(formLogin -> formLogin
+                        .successHandler(customizeAuthenticationSuccessHandler).loginPage("/login")
+                        .failureUrl("/login?error=true").usernameParameter("email").passwordParameter("password")
+                        )
+                .logout(logout -> logout
+                        .logoutUrl("/logout")
+                        .logoutSuccessUrl("/login?logout"))
+                .exceptionHandling((exh -> exh.authenticationEntryPoint(
+                        (request, response, ex) ->
+                            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, ex.getMessage())
+                )));
+
+        return http.build();
     }
 
-
-    public void configure(WebSecurity web) {
-        web.ignoring().requestMatchers("/resources/**", "/static/**", "/css/**", "/js/**", "/images/**");
-        web.httpFirewall(allowUrlEncodedDoubleSlashFirewall());
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        return web-> {web.ignoring().requestMatchers("/resources/**", "/static/**", "/css/**", "/js/**", "/images/**");
+            web.httpFirewall(allowUrlEncodedDoubleSlashFirewall());
+        };
     }
 
 }
