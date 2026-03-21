@@ -27,7 +27,7 @@
                             <tr th:each="note : ${notes}">
                                 <td><a th:text="${note.title}" th:href="@{'/notes/show/' + ${note.id}}"></a></td>
                                 <td th:text="${note.content}"></td>
-                                <td th:text="${new java.text.SimpleDateFormat('dd MMM yyyy').format(note.updated)}"></td>
+                                <td th:text="${#dates.format(note.updated, 'dd MMM yyyy')}"></td>
                             </tr>
                         </tbody>
                     </table>
