@@ -18,9 +18,9 @@
                     <dt>Content</dt>
                     <dd th:text="${note.content}"></dd>
                     <dt>Updated</dt>
-                    <dd th:text="${new java.text.SimpleDateFormat('dd MMM yyyy').format(note.updated)}"></dd>
+                    <dd th:text="${#dates.format(note.updated, 'dd MMM yyyy')}"></dd>
                 </dl>
-                <form th:action="@{/notes/delete}">
+                <form th:action="@{/notes/delete}"method="post">
                     <input type="hidden" name="id" th:value="${note.id}" />
                     <h2><input type="submit" class="btn btn-danger" value="Delete" onclick="return confirm('Are you sure?');" />
                         <a th:href="@{'/notes/edit/' + ${note.id}}" class="btn btn-warning"><i class="fas fa-edit"></i> Edit</a></h2>
