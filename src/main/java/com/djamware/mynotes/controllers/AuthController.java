@@ -53,7 +53,8 @@ public class AuthController {
 
 			User newUser = new User();
 			newUser.setEmail(userDTO.getEmail());
-
+			newUser.setPassword(userDTO.getPassword());
+			newUser.setFullname(userDTO.getFullname());
 			userService.saveUser(newUser);
 			modelAndView.addObject("successMessage", "User has been registered successfully");
 			modelAndView.addObject("user", new User());
